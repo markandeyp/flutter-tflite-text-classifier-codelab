@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-03-10T06:50:47Z",
+  "id": "text-classifier-flutter-tflite",
+  "duration": 55,
+  "title": "Building text classifier with Flutter and TFLite",
+  "authors": "Markandey Pathak",
+  "summary": "Building text classifier with Flutter and TFLite",
+  "source": "codelab.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "flutter",
+    "tensorflowlite",
+    "appliedmachinelearning"
+  ],
+  "tags": [
+    "flutter",
+    "nlp",
+    "tensorflow-lite",
+    "text-classifier",
+    "web"
+  ],
+  "feedback": "markandeypathak@live.com",
+  "url": "text-classifier-flutter-tflite"
+}

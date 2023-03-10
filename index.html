@@ -1,0 +1,523 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Building text classifier with Flutter and TFLite</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="text-classifier-flutter-tflite"
+                  title="Building text classifier with Flutter and TFLite"
+                  environment="web"
+                  feedback-link="markandeypathak@live.com">
+    
+      <google-codelab-step label="Overview" duration="5">
+        <p>Welcome to the workshop <strong>Building text classifier with Flutter and TFLite</strong>. In this workshop, we will learn how to build an NLP classifier using Flutter and TensorFlow Lite. We&#39;ll cover</p>
+<ul>
+<li>Machine Learning basics</li>
+<li>Setting up development environment</li>
+<li>Writing a simple Flutter application, and</li>
+<li>Integrating TensorFlow Lite.</li>
+</ul>
+<p>We will use a pre-trained <a href="https://storage.googleapis.com/download.tensorflow.org/models/tflite/text_classification/text_classification.tflite" target="_blank">Tensorflow Lite Model</a>. By the end, you&#39;ll have the skills to build more sophisticated cross-platform applications with machine learning capabilities.</p>
+<h2 is-upgraded>What we will build</h2>
+<p class="image-container"><img alt="What we will build" src="img/e72cd4df88a98b94.gif"></p>
+<h2 is-upgraded>What will you need?</h2>
+<ol type="1">
+<li>A <strong>positive</strong> attitude</li>
+<li>Laptop (Windows/Linux/Mac)</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Flutter" duration="10">
+        <h2 is-upgraded>What is Flutter</h2>
+<p>Flutter is a free and open-source cross-platform application development framework created by <strong>Google</strong>. It allows developers to build high-quality, cross-platform apps for <em>Android</em>, <em>iOS</em>, <em>macOS</em>, <em>Linux</em>, <em>Windows</em> and <em>Web</em> platforms using a single codebase. Flutter uses the <strong>Dart</strong> programming language and provides a rich set of pre-built widgets that are customizable to fit your design needs. It also includes a powerful set of tools and features such as hot-reload for rapid development, platform-specific APIs, and easy integration with backend services. Whether you&#39;re a beginner or an experienced developer, Flutter makes it easy to create beautiful, performant, and engaging mobile apps.</p>
+<h2 is-upgraded>Why Flutter?</h2>
+<p>Here are a few reasons why you might want to consider using Flutter for your mobile app development:</p>
+<ol type="1">
+<li>Cross-platform development: Flutter allows you to build high-quality, natively compiled apps for both several platforms with a single codebase. This means you can save time and resources on development and maintenance of two separate codebases.</li>
+<li>Fast development: Flutter&#39;s hot-reload feature allows you to see the changes you make to your code in real-time, making the development process faster and more efficient.</li>
+<li>Rich set of pre-built widgets: Flutter comes with a wide range of customizable widgets that can help you create beautiful and responsive user interfaces.</li>
+<li>High-performance: Flutter&#39;s Dart programming language and native compilation enable it to deliver high performance, even on older devices.</li>
+<li>Easy to learn: Flutter&#39;s easy-to-understand syntax and extensive documentation make it accessible to developers of all skill levels.</li>
+<li>Growing community: Flutter has a rapidly growing community of developers who are constantly creating new packages, plugins, and widgets, which means you can benefit from a rich ecosystem of tools and resources.</li>
+</ol>
+<p>Overall, if you&#39;re looking for a flexible, fast, and efficient way to build high-quality cross-platform apps, Flutter is definitely worth considering.</p>
+<h2 is-upgraded>Environment Setup</h2>
+<p>Setting up your Flutter development environment involves installing Flutter, configuring your IDE, setting up your Android/iOS devices or emulators, configuring your PATH environment variable, and verifying your installation using the <code>flutter doctor</code> command.</p>
+<p>We will follow the <a href="https://docs.flutter.dev/get-started/install" target="_blank">official guide</a> to configure our development environment</p>
+<h2 is-upgraded>Create a new flutter project</h2>
+<pre><code language="language-bash" class="language-bash">flutter create flutter_text_classification
+</code></pre>
+<p>Above command will generate the boilerplate flutter project. Open the project folder with your favorite IDE. The folder structure will look something like below</p>
+<p class="image-container"><img alt="A new flutter project structure" src="img/b16a80d8d6307853.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tensorflow &amp; Tensorflow Lite" duration="5">
+        <h2 is-upgraded>Tensorflow</h2>
+<p>TensorFlow is an open-source software library used for building and training machine learning models. It can be used for a wide range of applications such as image recognition, speech recognition, and even playing games. TensorFlow is highly scalable and can run on a variety of devices, including CPUs, GPUs, and TPUs.</p>
+<h2 is-upgraded>Tensorflow Lite</h2>
+<p>TensorFlow Lite, on the other hand, is a lightweight version of TensorFlow that is designed to run on mobile and embedded devices with limited computing power. It&#39;s optimized for running machine learning models on mobile devices such as smartphones and tablets, and can be used for a variety of applications, including object detection, face recognition, and even predictive text input.</p>
+<p>TensorFlow Lite offers several benefits, including:</p>
+<ol type="1">
+<li>Reduced model size: TensorFlow Lite models are optimized for mobile and embedded devices, which means they are smaller and use fewer resources than their full-scale TensorFlow counterparts.</li>
+<li>Faster inference: TensorFlow Lite models are designed to run faster on mobile and embedded devices, making them ideal for real-time applications like object detection or face recognition.</li>
+<li>Lower power consumption: TensorFlow Lite models use less power than their full-scale counterparts, which is important for battery-powered devices like smartphones and wearables.</li>
+<li>Flexibility: TensorFlow Lite models can be easily integrated into mobile apps or embedded systems, making it easy to add machine learning capabilities to existing applications.</li>
+<li>Privacy: TensorFlow Lite can be used to build models that run locally on a device, which means that data does not need to be sent to the cloud for processing, enhancing privacy and security.</li>
+</ol>
+<p>Overall, TensorFlow Lite is a powerful tool for anyone looking to build machine learning models for mobile and embedded devices. It offers several benefits that make it an ideal choice for developers who want to build efficient, fast, and flexible machine learning models that can run on a variety of devices.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tensorflow to Tensorflow Lite Model" duration="2">
+        <p>TensorFlow Lite provides a simple and efficient way to convert TensorFlow models into a format that can be run on mobile and embedded devices. The conversion process optimizes the model for deployment on devices with limited computational resources, resulting in smaller and faster models. TensorFlow Lite also provides tools for quantizing models, reducing the number of bits needed to represent model parameters, further reducing model size and increasing inference speed. Overall, converting TensorFlow models to TensorFlow Lite enables developers to deploy machine learning models on a wide range of devices, including smartphones, wearables, and IoT devices, and provides a faster and more efficient user experience.</p>
+<p>The model used in this workshop is TFLite version of <a href="https://colab.research.google.com/github/tensorflow/hub/blob/master/examples/colab/tf2_text_classification.ipynb" target="_blank">this</a>.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="tflite_flutter Plugin" duration="3">
+        <h2 is-upgraded>Overview</h2>
+<p><a href="https://pub.dev/packages/tflite_flutter" target="_blank">TensorFlow Lite Flutter</a> plugin provides a flexible and fast solution for accessing TensorFlow Lite interpreter and performing inference. The API is similar to the TFLite Java and Swift APIs. It directly binds to TFLite C API making it efficient (low-latency).</p>
+<p>Key Features</p>
+<ul>
+<li>Multi-platform Support for Android, iOS, Windows, Mac, Linux.</li>
+<li>Flexibility to use any TFLite Model.</li>
+<li>Acceleration using multi-threading and delegate support.</li>
+<li>Similar structure as TensorFlow Lite Java API.</li>
+<li>Inference speeds close to native Android Apps built using the Java API.</li>
+<li>You can choose to use any TensorFlow version by building binaries locally.</li>
+<li>Run inference in different isolates to prevent jank in UI thread.</li>
+</ul>
+<h2 is-upgraded>Installation</h2>
+<p><code>tflite_flutter</code> requires setting up tensorflow libraries for various environments. To do this, we will follow <a href="https://pub.dev/packages/tflite_flutter#important-initial-setup--add-dynamic-libraries-to-your-app" target="_blank">official plugin guidelines</a></p>
+<h2 is-upgraded>Model &amp; Vocab</h2>
+<p><code>tflite_flutter</code> plugin allows us to load a tflite model from file system.</p>
+<p>Let&#39;s download the <a href="https://storage.googleapis.com/download.tensorflow.org/models/tflite/text_classification/text_classification.tflite" target="_blank">Tensorflow Lite Model</a> and <a href="./assets/vocab.txt" target="_blank">Vocabulary</a></p>
+<p>We will place the downloaded model in <code>assets</code> folder at our project root.</p>
+<p>For simplicity, we will rename the model to <code>model.tflite</code>.</p>
+<p class="image-container"><img alt="assets folder" src="img/66d5cbe0befaf726.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Flutter UI" duration="0">
+        <p>Duration 0:10:00</p>
+<h2 is-upgraded>Everything is a Widget</h2>
+<p>Widgets are the building blocks of a Flutter application and represent the visual elements on the screen, such as buttons, text, images, and more.</p>
+<p>Some basic widgets in Flutter include:</p>
+<ul>
+<li><code>Text</code>: used to display text on the screen</li>
+<li><code>Image</code>: used to display images on the screen</li>
+<li><code>Container</code>: used to group other widgets together and provide padding and margin</li>
+<li><code>Row</code> and <code>Column</code>: used to lay out widgets horizontally or vertically</li>
+<li><code>Button</code>: used to create interactive buttons that respond to user input</li>
+<li><code>TextField</code>: used to allow users to input text</li>
+<li><code>Scaffold</code>: used to provide basic app layout elements, such as an app bar and navigation drawer.</li>
+</ul>
+<p>Widgets can also be customized by changing their properties, such as font size, color, and background color, to match the design of the application.</p>
+<p>Flutter widgets are organized in a hierarchy, with the top-level widget representing the entire screen and nested widgets representing the individual elements on the screen. This makes it easy to create complex layouts and user interfaces.</p>
+<h2 is-upgraded>Stateless Widget</h2>
+<p>In Flutter, a StatelessWidget is a type of widget that represents a piece of the user interface that does not change over time. This means that it has no internal state and does not update itself in response to user interactions or changes in data.</p>
+<p>A common use case for a StatelessWidget is to display static content that does not need to be updated, such as text, images, or icons. To create a StatelessWidget in Flutter, you need to create a class that extends the StatelessWidget class and override the build method. The build method returns a Widget that describes the visual elements of the user interface.</p>
+<p>Here is an example of a StatelessWidget that displays a piece of text:</p>
+<pre><code language="language-dart" class="language-dart">class MyTextWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      &#39;Hello, World!&#39;,
+      style: TextStyle(fontSize: 24),
+    );
+  }
+}
+</code></pre>
+<p>In this example, we define a new class called MyTextWidget that extends the StatelessWidget class. In the build method, we return a Text widget that displays the text &#34;Hello, World!&#34; with a font size of 24.</p>
+<h2 is-upgraded>Stateful Widget</h2>
+<p>A StatefulWidget is a type of widget that can change its internal state during its lifetime. This means that a StatefulWidget can be updated in response to user interactions or changes in data.</p>
+<p>A common use case for a StatefulWidget is to display dynamic content that can change over time, such as a list of items or a form. To create a StatefulWidget in Flutter, you need to create a class that extends the StatefulWidget class and override two methods: createState and build.</p>
+<p>The createState method returns a State object that manages the internal state of the widget, while the build method returns a Widget that describes the visual elements of the user interface.</p>
+<p>Here is an example of a StatefulWidget that displays a counter and increments it when a button is pressed:</p>
+<pre><code language="language-dart" class="language-dart">class MyCounterWidget extends StatefulWidget {
+  const MyCounterWidget({super.key});
+
+  @override
+  State&lt;MyCounterWidget&gt; createState() =&gt; _MyCounterWidgetState();
+}
+
+class _MyCounterWidgetState extends State&lt;MyCounterWidget&gt; {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          &#39;Counter: $_counter&#39;,
+          style: TextStyle(fontSize: 24),
+        ),
+        ElevatedButton(
+          onPressed: _incrementCounter,
+          child: Text(&#39;Increment&#39;),
+        ),
+      ],
+    );
+  }
+}
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Building our primary Screen" duration="5">
+        <p>Below Flutter code creates a user interface with a blue material theme and disabled debug banner, containing a text input box and a button for analyzing a movie review.</p>
+<p>The code sets up a <code>MaterialApp</code> widget with the specified theme and debug banner settings, and sets the home screen to be a Scaffold widget. The body of the <code>Scaffold</code> widget arranges its child widgets in a vertical column. The <code>Column</code> widget is given a padding of 20 units on all sides.</p>
+<p>Inside the Column widget, there is a <code>TextField</code> widget that provides a text input box for the user to type in a movie review. Below the text input box, there is an <code>ElevatedButton</code>. This button is used to trigger an action when the user wants to analyse the movie review that they have entered. The <code>onPressed</code> callback of the ElevatedButton widget can be used to define the logic for the analyse button press.</p>
+<p>Replace the contents of <code>main.dart</code> in your <code>lib</code> folder with the code below.</p>
+<pre><code language="language-dart" class="language-dart">import &#39;package:flutter/material.dart&#39;;
+
+void main() {
+  runApp(const TextClassifierApp());
+}
+
+class TextClassifierApp extends StatefulWidget {
+  const TextClassifierApp({super.key});
+
+  @override
+  State&lt;TextClassifierApp&gt; createState() =&gt; _TextClassifierAppState();
+}
+
+class _TextClassifierAppState extends State&lt;TextClassifierApp&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movie Review Analyzer&#39;),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: &#39;Type a movie review&#39;,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Analyse button on press logic goes here
+                },
+                child: const Text(&#39;Analyse&#39;),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+<h2 is-upgraded>Running the flutter app</h2>
+<p>It&#39;s time to run the flutter app and see it in action. To launch the application:</p>
+<ol type="1">
+<li>Open your Flutter project in Visual Studio Code.</li>
+<li>Ensure that you have installed the Flutter extension in Visual Studio Code. If not, install the Flutter extension by going to the Extensions tab on the left sidebar and searching for &#34;Flutter&#34;.</li>
+<li>Open the <code>main.dart</code> file.</li>
+<li>Select your Android or iOS emulator</li>
+<li>Press F5 or select &#34;Run&#34; from the Run menu in the top toolbar of Visual Studio Code.</li>
+</ol>
+<p>That&#39;s it! You have now launched your Flutter application using the VS Code Flutter extension.</p>
+<p class="image-container"><img alt="main screen" src="img/431e0b05c7d390ae.png"></p>
+<p>You can make changes to your code and see them reflected in your app in real-time using Hot Reload, which is enabled by default in Flutter.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Building our Classifier" duration="10">
+        <p>To analyse the text (movie review) entered by user, we need to build a Classifier which will tokenize the input text, create an interpreter from our download tflite model and then run the classification.</p>
+<p>Create a new file <code>classifier.dart</code> inside <code>lib</code> folder and enter the below code.</p>
+<pre><code language="language-dart" class="language-dart">import &#39;package:flutter/foundation.dart&#39;;
+import &#39;package:flutter/services.dart&#39;;
+
+// Import tflite_flutter
+import &#39;package:tflite_flutter/tflite_flutter.dart&#39;;
+
+class Classifier {
+  // name of the model file
+  final _modelFile = &#39;model.tflite&#39;;
+  final _vocabFile = &#39;vocab.txt&#39;;
+
+  // Maximum length of sentence
+  final int _sentenceLen = 256;
+
+  final String start = &#39;&lt;START&gt;&#39;;
+  final String pad = &#39;&lt;PAD&gt;&#39;;
+  final String unk = &#39;&lt;UNKNOWN&gt;&#39;;
+
+  late Map&lt;String, int&gt; _dict;
+
+  // TensorFlow Lite Interpreter object
+  late Interpreter _interpreter;
+
+  Classifier() {
+    // Load model when the classifier is initialized.
+    _loadModel();
+    _loadDictionary();
+  }
+
+  void _loadModel() async {
+    // Creating the interpreter using Interpreter.fromAsset
+    _interpreter = await Interpreter.fromAsset(_modelFile);
+    if (kDebugMode) {
+      print(&#39;Interpreter loaded successfully&#39;);
+    }
+  }
+
+  void _loadDictionary() async {
+    final vocab = await rootBundle.loadString(&#39;assets/$_vocabFile&#39;);
+    var dict = &lt;String, int&gt;{};
+    final vocabList = vocab.split(&#39;\n&#39;);
+    for (var i = 0; i &lt; vocabList.length; i++) {
+      var entry = vocabList[i].trim().split(&#39; &#39;);
+      dict[entry[0]] = int.parse(entry[1]);
+    }
+    _dict = dict;
+    if (kDebugMode) {
+      print(&#39;Dictionary loaded successfully&#39;);
+    }
+  }
+
+  List&lt;double&gt; classify(String rawText) {
+    // tokenizeInputText returns List&lt;List&lt;double&gt;&gt;
+    // of shape [1, 256].
+    List&lt;List&lt;double&gt;&gt; input = tokenizeInputText(rawText);
+
+    // output of shape [1,2].
+    var output = List&lt;double&gt;.filled(2, 0).reshape([1, 2]);
+
+    // The run method will run inference and
+    // store the resulting values in output.
+    _interpreter.run(input, output);
+
+    return [output[0][0], output[0][1]];
+  }
+
+  List&lt;List&lt;double&gt;&gt; tokenizeInputText(String text) {
+    // Whitespace tokenization
+    final tokens = text.split(&#39; &#39;);
+
+    // Create a list of length==_sentenceLen filled with the value &lt;pad&gt;
+    var vec = List&lt;double&gt;.filled(_sentenceLen, _dict[pad]!.toDouble());
+
+    var index = 0;
+    if (_dict.containsKey(start)) {
+      vec[index++] = _dict[start]!.toDouble();
+    }
+
+    // For each word in sentence find corresponding index in dict
+    for (var tok in tokens) {
+      if (index &gt; _sentenceLen) {
+        break;
+      }
+      vec[index++] = _dict.containsKey(tok)
+          ? _dict[tok]!.toDouble()
+          : _dict[unk]!.toDouble();
+    }
+
+    // returning List&lt;List&lt;double&gt;&gt; as our interpreter input tensor expects the shape, [1,256]
+    return [vec];
+  }
+}
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Perform Classification" duration="10">
+        <p>When the user enters the text and taps the button, we can read the entered review and use <code>classify()</code> to get the classification probabilities.</p>
+<pre><code language="language-dart" class="language-dart">final Classifier _classifier = Classifier();
+final predictions = _classifier.classify(&#34;entered review&#34;);
+final negative_prob = predictions[0];
+final positive_prob = predictions[1];
+</code></pre>
+<p>To read the input from the <code>TextField</code>, we can use <code>TextEditingController</code>. <code>TextEditingController</code> allows us to programmatically interact with the <code>TextField</code>.</p>
+<pre><code language="language-dart" class="language-dart">final TextEditingController _controller = TextEditingController();
+
+TextField(
+  ...
+  controller: _controller)
+</code></pre>
+<p>We will create two state variables <code>review</code> and <code>predictions</code> to update the UI</p>
+<pre><code language="language-dart" class="language-dart">String review = &#34;&#34;;
+List&lt;double&gt; predictions = [];
+</code></pre>
+<p>To handle the pressed event of <code>ElevatedButton</code>, <code>onPressed</code> parameter can be used. We will read the input, perform classification and finally update the state.</p>
+<pre><code language="language-dart" class="language-dart">ElevatedButton (
+  onPressed: () {
+    setState(() {
+        review = _controller.text;
+        predictions = _classifier.classify(review);
+    });
+    _controller.clear();
+})
+</code></pre>
+<p>We can then display the updated state values using <code>Card</code> widget.</p>
+<pre><code language="language-dart" class="language-dart">Card(
+  children: &lt;Widget&gt;[
+    ListTile(
+      title: Text(&#39;Review: $review&#39;),
+      subtitle: Text(&#39;Positive: ${predictions[1].toStringAsFixed(4)}\nNegative: ${predictions[0].toStringAsFixed(4)}&#39;)),
+  ],
+)
+</code></pre>
+<p>Below is how the final <code>main.dart</code> should look like:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;package:flutter/material.dart&#39;;
+import &#39;classifier.dart&#39;;
+
+void main() {
+  runApp(const TextClassifierApp());
+}
+
+class TextClassifierApp extends StatefulWidget {
+  const TextClassifierApp({super.key});
+
+  @override
+  State&lt;TextClassifierApp&gt; createState() =&gt; _TextClassifierAppState();
+}
+
+class _TextClassifierAppState extends State&lt;TextClassifierApp&gt; {
+  final TextEditingController _controller = TextEditingController();
+  final Classifier _classifier = Classifier();
+  String review = &#34;&#34;;
+  List&lt;double&gt; predictions = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Movie Review Analyzer&#39;),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: &#39;Type a movie review&#39;,
+                ),
+                controller: _controller,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  child: const Text(&#39;Analyse&#39;),
+                  onPressed: () {
+                    setState(() {
+                      review = _controller.text;
+                      predictions = _classifier.classify(review);
+                    });
+                    _controller.clear();
+                  }),
+              const SizedBox(height: 20),
+              if (predictions.length == 2)
+                Card(
+                  color: predictions[1] &gt; predictions[0]
+                      ? Colors.lightGreen
+                      : Colors.red,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: &lt;Widget&gt;[
+                      ListTile(
+                          leading: const Icon(Icons.question_answer_outlined),
+                          title: Text(
+                            &#39;Review: $review&#39;,
+                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            &#39;Positive: ${predictions[1].toStringAsFixed(4)}\nNegative: ${predictions[0].toStringAsFixed(4)}&#39;,
+                            style: const TextStyle(fontSize: 15, color: Colors.white),
+                          )),
+                    ],
+                  ),
+                )
+              else
+                Container()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Final app" duration="0">
+        <p>That&#39;s it, the application is now ready to be tested.</p>
+<p class="image-container"><img alt="final application" src="img/e72cd4df88a98b94.gif"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Congratulations" duration="0">
+        <p class="image-container"><img alt="congratulations" src="img/e950c90e2f0a9a20.png"></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
